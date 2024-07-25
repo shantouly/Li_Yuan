@@ -200,6 +200,7 @@ const slides = document.querySelectorAll('.slide');
 const dotContainer = document.querySelector('.dots');
 
 let curSlide = 0;
+let autoSlideInterval;
 const maxSlide = slides.length;
 
 // slider.style.transform = 'scale(0.4) translateX(-800px)';
@@ -254,21 +255,30 @@ const previousSlide = function () {
   goToSlide(curSlide);
   activateDot(curSlide);
 };
+function autoSilde() {
+  autoSlideInterval = setInterval(nextSlide, 5000);
+}
 
 const init = function () {
   goToSlide(0);
   createDots();
 
   activateDot(0);
+  autoSilde();
 };
 init();
+
 // Add slide effect to button--Right
 btnRight.addEventListener('click', function () {
+  clearInterval(autoSlideInterval);
   nextSlide();
+  autoSilde();
 });
 // Add slide effect to button--Left
 btnLeft.addEventListener('click', function () {
+  clearInterval(autoSlideInterval);
   previousSlide();
+  autoSilde();
 });
 
 // Add slide effect to Arrow--Right
@@ -278,10 +288,13 @@ document.addEventListener('keyup', function (e) {
 });
 
 dotContainer.addEventListener('click', function (e) {
+  clearInterval(autoSlideInterval);
   if (e.target.classList.contains('dots__dot')) {
-    const slide = e.target.dataset;
+    const { slide } = e.target.dataset;
+    curSlide = slide;
     goToSlide(slide);
     activateDot(slide);
   }
+  autoSilde();
 });
 slider();
